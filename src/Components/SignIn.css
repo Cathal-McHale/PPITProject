@@ -1,0 +1,44 @@
+/* SignIn.css */
+
+.signin-container .signin-box {
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .signin-box h2 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+  }
+  
+  .signin-box p {
+    margin-bottom: 30px;
+    color: #555;
+  }
+  
+  .google-signin-btn {
+    width: 100%;
+    text-transform: none; /* Prevents capitalizing the button text */
+  }
+  
+  /* This targets the internal button styling within the GoogleLogin component */
+  .google-signin-btn button {
+    width: 100% !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 10px !important;
+    font-size: 16px !important;
+    text-align: center !important;
+    display: block;
+    margin: auto;
+    color: #fff !important;
+    background-color: #db4437 !important;
+    box-shadow: none !important;
+  }
+  
+  .google-signin-btn button:hover {
+    background-color: #c1351d !important;
+  }
+  
