@@ -5,6 +5,17 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { SearchBar } from './SearchBar';
+
+
+//searchbar
+
+
+
+
+
+
+
 
 // Example static data
 const products = [
@@ -28,6 +39,10 @@ const products = [
 function Trending() {
   return (
     <Container>
+      <div class="searchbar-container">
+        <SearchBar />
+        <div>Search Results</div>
+      </div>
       <h1 className="mt-5">Trending Products</h1>
       <Row xs={1} md={2} lg={3} className="g-4 mt-3">
         {products.map((product) => (
