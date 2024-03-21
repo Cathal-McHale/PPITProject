@@ -1,21 +1,12 @@
-// src/Trending.js
-import React from 'react';
+import React, { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { SearchBar } from './SearchBar';
-
-
-//searchbar
-
-
-
-
-
-
-
+import { SearchResultsList } from './SearchResultsList';
+import axios from 'axios'; // Import Axios
 
 // Example static data
 const products = [
@@ -37,11 +28,25 @@ const products = [
 ];
 
 function Trending() {
+  const [results, setResults] = useState([]);
+
+  // Function to handle eBay search
+  const handleSearch = async (query) => {
+    try {
+      const response = await axios.get(`https://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findItemsByKeywords&SERVICE-VERSION=1.0.0&SECURITY-APPNAME=CathalMc-PPITProj-SBX-921dfce92-3dfa19c2&GLOBAL-ID=EBAY-US&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD&keywords=${query}`);
+      setResults(response.data.findItemsByKeywordsResponse[0].searchResult[0].item);
+    } catch (error) {
+      console.error('Error fetching eBay search results:', error);
+    }
+  };
+
   return (
     <Container>
-      <div class="searchbar-container">
-        <SearchBar />
-        <div>Search Results</div>
+      <div className="searchbar-container">
+        {/* Pass setResults function to SearchBar component */}
+        <SearchBar setResults={setResults} />
+        {/* Pass results to SearchResultsList component */}
+        <SearchResultsList results={results} />
       </div>
       <h1 className="mt-5">Trending Products</h1>
       <Row xs={1} md={2} lg={3} className="g-4 mt-3">

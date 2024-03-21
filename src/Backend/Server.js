@@ -1,37 +1,64 @@
-const express = require('express')
-const app = express()
-const port = 4000
-const cors = require('cors');
+const express = require('express');
+const axios = require('axios');
 
+const app = express();
+const port = 4000;
 
-app.use(cors());
-app.use(function(req, res, next) {
-res.header("Access-Control-Allow-Origin", "*");
-res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-res.header("Access-Control-Allow-Headers",
-"Origin, X-Requested-With, Content-Type, Accept");
-next();
+app.use(express.json());
+
+// Simulated user database
+const users = [
+  { email: 'user1@example.com', password: 'password1' },
+  { email: 'user2@example.com', password: 'password2' }
+];
+
+// POST request handler for signing in
+app.post('/signin', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Simulated authentication logic
+    const user = users.find(user => user.email === email && user.password === password);
+
+    if (user) {
+      // If authentication is successful, send a success response
+      res.status(200).json({ message: 'Sign in successful', user });
+    } else {
+      // If authentication fails, send an error response
+      res.status(401).json({ error: 'Invalid email or password' });
+    }
+  } catch (error) {
+    // If an error occurs during authentication, send a server error response
+    console.error('Error signing in:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
-const bodyParser = require("body-parser");
+// GET request handler for eBay search
+app.get('/search', async (req, res) => {
+  const { query } = req.query;
 
-//Here we are configuring express to use body-parser as middle-ware.
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+  try {
+    const response = await axios.get(`https://svcs.ebay.com/services/search/FindingService/v1`, {
+      params: {
+        'OPERATION-NAME': 'findItemsByKeywords',
+        'SERVICE-VERSION': '1.0.0',
+        'SECURITY-APPNAME': 'CathalMc-PPITProj-SBX-921dfce92-3dfa19c2',
+        'GLOBAL-ID': 'EBAY-US',
+        'RESPONSE-DATA-FORMAT': 'JSON',
+        'REST-PAYLOAD': true,
+        keywords: query, // Ensure that the query parameter is passed correctly
+      },
+    });
 
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching eBay search results:', error);
+    res.status(500).json({ error: 'Failed to fetch eBay search results' });
+  }
+});
 
-// getting-started.js
-//const mongoose = require('mongoose');
-
-main().catch(err => console.log(err));
-
-async function main() {
-  //await mongoose.connect('mongodb+srv://g00402138:<ATU12345!!>@cathalmchale.cvr04oh.mongodb.net/');
-
-  // use `await mongoose.connect('mongodb://g00402138:ATU12345@127.0.0.1:27017/test');` if your database has auth enabled
-}
-
-
+// Start the server
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Server is running on http://localhost:${port}`);
+});

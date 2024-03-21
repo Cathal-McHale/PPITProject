@@ -1,44 +1,50 @@
 /* SignIn.css */
 
-.signin-container .signin-box {
-    background: #fff;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .signin-box h2 {
-    margin-bottom: 20px;
-    font-size: 2rem;
-  }
-  
-  .signin-box p {
-    margin-bottom: 30px;
-    color: #555;
-  }
-  
-  .google-signin-btn {
-    width: 100%;
-    text-transform: none; /* Prevents capitalizing the button text */
-  }
-  
-  /* This targets the internal button styling within the GoogleLogin component */
-  .google-signin-btn button {
-    width: 100% !important;
-    border: none !important;
-    border-radius: 4px !important;
-    padding: 10px !important;
-    font-size: 16px !important;
-    text-align: center !important;
-    display: block;
-    margin: auto;
-    color: #fff !important;
-    background-color: #db4437 !important;
-    box-shadow: none !important;
-  }
-  
-  .google-signin-btn button:hover {
-    background-color: #c1351d !important;
-  }
-  
+.signin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.signin-box {
+  background: #f8f9fa;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.signin-box h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #343a40; /* Dark color for headings */
+}
+
+.signin-box p {
+  margin-bottom: 30px;
+  color: #555;
+}
+
+.signin-box .form-control {
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.signin-box .form-control:focus {
+  box-shadow: none;
+}
+
+.signin-box .btn-primary {
+  border-radius: 20px;
+  padding: 10px 30px;
+  font-size: 16px;
+  background-color: #007bff; /* Primary button color */
+  border-color: #007bff;
+}
+
+.signin-box .btn-primary:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}

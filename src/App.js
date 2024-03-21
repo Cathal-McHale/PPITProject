@@ -11,10 +11,11 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import About from './Components/about';
 import Trending from './Components/trending';
 import Contact from './Components/contact'; // Ensure you have a Contact component
-import './Components/about.css'; 
-import './Components/trending.css'; 
+import './Components/about.css';
+import './Components/trending.css';
 import SignIn from './Components/signin';
-//import Footer from './Components/footer';
+import SignUp from './Components/signUp';
+
 
 function App() {
   return (
@@ -33,17 +34,21 @@ function App() {
               </Nav>
               <Form inline className="d-flex">
                 <Button variant="outline-success" href="/signin">Sign In</Button>
+                <Button variant="outline-success" href="/signUp">Sign Up</Button>
+
               </Form>
             </Navbar.Collapse>
           </Container>
         </Navbar>
-        
+
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/trending" element={<Trending />}></Route>
           <Route path="/about" element={<About />}></Route>
           <Route path="/contact" element={<Contact />}></Route>
           <Route path="/signin" element={<SignIn />}></Route>
+          <Route path="/signUp" element={<SignUp />}></Route>
+
         </Routes>
       </div>
     </BrowserRouter>
@@ -57,8 +62,8 @@ function Home() {
       <header className="App-header">
         <h1>Welcome to Trending Products</h1>
         <p>Discover the most popular products right now!</p>
-        <Button variant="primary" href="#trending">Explore Trending Products</Button>
-      </header>
+        <Button variant="primary" as={Link} to="./trending">Explore Trending Products</Button>   
+           </header>
 
       <Container className="my-5">
         <h2 className="text-center mb-4">Featured Products</h2>
