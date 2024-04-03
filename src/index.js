@@ -1,42 +1,38 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client'; // Import createRoot from react-dom/client
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDpsjzkbI7V5YXObnLct3C3c0D5aeNGors",
-  authDomain: "ppit-a99df.firebaseapp.com",
-  projectId: "ppit-a99df",
-  storageBucket: "ppit-a99df.appspot.com",
-  messagingSenderId: "867117843549",
-  appId: "1:867117843549:web:ef285abd3023b8956f39b4",
-  measurementId: "G-BKRZDP3NNR"
+  apiKey: "AIzaSyDIPO4UxrU8ybNkV9mR9_apW6hcySiV5gE",
+  authDomain: "ppitproject-550fd.firebaseapp.com",
+  databaseURL: "https://ppitproject-550fd-default-rtdb.firebaseio.com",
+  projectId: "ppitproject-550fd",
+  storageBucket: "ppitproject-550fd.appspot.com",
+  messagingSenderId: "984025950669",
+  appId: "1:984025950669:web:1e04034bf1f04550cb3c84",
+  measurementId: "G-FSH71MGJHZ"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-
-
-const root = document.getElementById('root');
-ReactDOM.render(
+// Update rendering code to use createRoot
+const root = createRoot(document.getElementById('root'));
+root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-  root
+  </React.StrictMode>
 );
 
 reportWebVitals();
-
 
 
 

@@ -1,50 +1,43 @@
 /* SignIn.css */
-
-.signin-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.signin-box {
-  background: #f8f9fa;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
+.sign-in-container {
   max-width: 400px;
-  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
 }
 
-.signin-box h2 {
+.sign-in-container h1 {
+  text-align: center;
   margin-bottom: 20px;
-  font-size: 2rem;
-  color: #343a40; /* Dark color for headings */
 }
 
-.signin-box p {
-  margin-bottom: 30px;
-  color: #555;
+.sign-in-container form {
+  display: flex;
+  flex-direction: column;
 }
 
-.signin-box .form-control {
-  border-radius: 20px;
-  padding: 10px 20px;
-}
-
-.signin-box .form-control:focus {
-  box-shadow: none;
-}
-
-.signin-box .btn-primary {
-  border-radius: 20px;
-  padding: 10px 30px;
+.sign-in-container input[type="email"],
+.sign-in-container input[type="password"],
+.sign-in-container input[type="text"] {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 16px;
-  background-color: #007bff; /* Primary button color */
-  border-color: #007bff;
 }
 
-.signin-box .btn-primary:hover {
-  background-color: #0056b3; /* Darker shade on hover */
+.sign-in-container button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.sign-in-container button:hover {
+  background-color: #0056b3;
 }

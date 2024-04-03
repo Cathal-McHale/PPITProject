@@ -1,10 +1,14 @@
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors');
+
+const bodyParser = require('body-parser');
 
 const app = express();
 const port = 4000;
 
-app.use(express.json());
+app.use(cors()); // Enable CORS for all routes
+app.use(bodyParser.json());
 
 // Simulated user database
 const users = [
@@ -12,51 +16,41 @@ const users = [
   { email: 'user2@example.com', password: 'password2' }
 ];
 
-// POST request handler for signing in
-app.post('/signin', async (req, res) => {
+// POST request handler for signing in or signing up
+app.post('/authenticate', async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Log the received data in the server console
+    console.log('Received data:', { email, password });
+
     // Simulated authentication logic
     const user = users.find(user => user.email === email && user.password === password);
 
     if (user) {
       // If authentication is successful, send a success response
-      res.status(200).json({ message: 'Sign in successful', user });
+      res.status(200).json({ message: 'Authentication successful', user });
     } else {
       // If authentication fails, send an error response
       res.status(401).json({ error: 'Invalid email or password' });
     }
   } catch (error) {
     // If an error occurs during authentication, send a server error response
-    console.error('Error signing in:', error);
+    console.error('Error authenticating user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-// GET request handler for eBay search
-app.get('/search', async (req, res) => {
-  const { query } = req.query;
 
-  try {
-    const response = await axios.get(`https://svcs.ebay.com/services/search/FindingService/v1`, {
-      params: {
-        'OPERATION-NAME': 'findItemsByKeywords',
-        'SERVICE-VERSION': '1.0.0',
-        'SECURITY-APPNAME': 'CathalMc-PPITProj-SBX-921dfce92-3dfa19c2',
-        'GLOBAL-ID': 'EBAY-US',
-        'RESPONSE-DATA-FORMAT': 'JSON',
-        'REST-PAYLOAD': true,
-        keywords: query, // Ensure that the query parameter is passed correctly
-      },
-    });
-
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error fetching eBay search results:', error);
-    res.status(500).json({ error: 'Failed to fetch eBay search results' });
-  }
+// POST request handler for receiving user data
+app.post('/', (req, res) => {
+  // Do something with the received user data
+  console.log('Received user data:', req.body);
+  res.send('User data received successfully');
 });
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
 
 // Start the server
 app.listen(port, () => {
