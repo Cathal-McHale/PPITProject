@@ -22,4 +22,4 @@ const ProductCard = ({ product }) => {
     );
 };
 
-export { ProductCard }; // Export ProductCard as named export
+export { ProductCard };

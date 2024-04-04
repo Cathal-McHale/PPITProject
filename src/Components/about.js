@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import Footer from './footer';
 
-// At the top of your About.js file
+
 
 
 function About() {

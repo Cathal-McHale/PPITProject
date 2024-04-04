@@ -1,6 +1,5 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { getAuth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import './SignIn.css';
 import Footer from "./footer";
 
@@ -10,6 +9,7 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
+  const [error, setError] = useState(null);
 
   const signUp = (e) => {
     e.preventDefault();
@@ -17,7 +17,7 @@ const SignUp = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log(userCredential);
-  
+
         // Prepare the user data
         const userData = {
           email: email,
@@ -25,7 +25,7 @@ const SignUp = () => {
           address: address,
           contact: contact
         };
-  
+
         fetch('http://localhost:4000/', {
           method: 'POST',
           headers: {
@@ -49,6 +49,20 @@ const SignUp = () => {
       });
   };
 
+  const signUpWithGoogle = () => {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+        setEmail(user.email); // Set email to user's email from Google
+        
+      })
+      .catch((error) => {
+        setError(error.message); // Set error state if sign-in with Google fails
+      });
+  };
 
   return (
     <div className="sign-in-container">
@@ -85,6 +99,8 @@ const SignUp = () => {
           onChange={(e) => setContact(e.target.value)}
         />
         <button type="submit">Sign Up Now</button>
+        <button type="button" onClick={signUpWithGoogle}>Sign Up with Google</button>
+        {error && <div className="error-message">{error}</div>}
       </form>
     </div>
   );

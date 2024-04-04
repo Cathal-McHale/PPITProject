@@ -1,4 +1,4 @@
-import React from 'react';
+
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
@@ -7,7 +7,7 @@ import Card from 'react-bootstrap/Card'; // Add this line
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router-dom';
 import About from './Components/about';
 import Trending from './Components/trending';
 import Contact from './Components/contact'; // Ensure you have a Contact component
@@ -15,9 +15,21 @@ import './Components/about.css';
 import './Components/trending.css';
 import SignIn from './Components/signin';
 import SignUp from './Components/signUp';
+import React, { useState, useEffect } from 'react';
+import Cart from './Components/cart';
+import { BiCart } from 'react-icons/bi';
+import axios from 'axios';
 
 
 function App() {
+
+
+  const [cart, setCart] = useState([]);
+
+  // Function to add item to cart
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+  };
   return (
     <BrowserRouter>
       <div className="App">
@@ -31,10 +43,14 @@ function App() {
                 <Nav.Link as={Link} to="/trending">Trending</Nav.Link>
                 <Nav.Link as={Link} to="/about">About</Nav.Link>
                 <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
+
               </Nav>
               <Form inline className="d-flex">
                 <Button variant="outline-success" href="/signin">Sign In</Button>
                 <Button variant="outline-success" href="/signUp">Sign Up</Button>
+                <Button variant="link" href="/cart">
+                  <BiCart size={20} /> Cart
+                </Button>
 
               </Form>
             </Navbar.Collapse>
@@ -48,7 +64,7 @@ function App() {
           <Route path="/contact" element={<Contact />}></Route>
           <Route path="/signin" element={<SignIn />}></Route>
           <Route path="/signUp" element={<SignUp />}></Route>
-
+          <Route path="/cart" element={<Cart cart={cart} />} /> {/* Pass cart state as a prop */}
         </Routes>
       </div>
     </BrowserRouter>
@@ -57,29 +73,46 @@ function App() {
 
 // Home component (assuming Trending component is similar)
 function Home() {
+  const [randomProduct, setRandomProduct] = useState(null);
+
+  useEffect(() => {
+    // Fetch a random product from the FakeStore API
+    axios.get('https://fakestoreapi.com/products')
+      .then(response => {
+        // Get a random item from the fetched products
+        const randomIndex = Math.floor(Math.random() * response.data.length);
+        const randomItem = response.data[randomIndex];
+        // Update state with the random product
+        setRandomProduct(randomItem);
+      })
+      .catch(error => console.error('Error fetching random product:', error));
+  }, []);
+
   return (
     <>
       <header className="App-header">
         <h1>Welcome to Trending Products</h1>
         <p>Discover the most popular products right now!</p>
-        <Button variant="primary" as={Link} to="./trending">Explore Trending Products</Button>   
-           </header>
+        <Button variant="primary" as={Link} to="/trending">Explore Trending Products</Button>
+      </header>
 
       <Container className="my-5">
         <h2 className="text-center mb-4">Featured Products</h2>
         <div className="d-flex flex-wrap justify-content-around">
-          {/* Example product card */}
-          <Card style={{ width: '18rem' }} className="m-2">
-            <Card.Img variant="top" src="https://via.placeholder.com/150" />
-            <Card.Body>
-              <Card.Title>Product 1</Card.Title>
-              <Card.Text>
-                This is a wider card with supporting text below as a natural lead-in to additional content.
-              </Card.Text>
-              <Button variant="primary">Go somewhere</Button>
-            </Card.Body>
-          </Card>
-          {/* Repeat for other products */}
+          {randomProduct && (
+            <Card style={{
+              width: '18rem', border: '1px solid #ccc',
+              borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)'
+            }} className="m-2">
+              <Card.Img variant="top" src={randomProduct.image} />
+              <Card.Body>
+                <Card.Title>{randomProduct.title}</Card.Title>
+                <Card.Text>{randomProduct.description}</Card.Text>
+                <Card.Text>Price: ${randomProduct.price}</Card.Text>
+                <Button variant="primary" href='/trending'>Explore more</Button>
+              </Card.Body>
+            </Card>
+          )}
         </div>
       </Container>
 
@@ -90,5 +123,6 @@ function Home() {
     </>
   );
 }
+
 
 export default App;

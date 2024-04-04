@@ -41,6 +41,20 @@ app.post('/authenticate', async (req, res) => {
   }
 });
 
+app.post('/add-to-cart', (req, res) => {
+  const itemData = req.body;
+  console.log('Item added to cart:', itemData);
+  // Process the item data as needed
+  // Respond to the client
+  res.send('Item added to cart successfully');
+});
+
+// POST request handler for receiving user data
+app.post('/signin', (req, res) => {
+  // Do something with the received user data
+  console.log('Received login details:', req.body);
+  res.send('Login details received successfully');
+});
 
 // POST request handler for receiving user data
 app.post('/', (req, res) => {
