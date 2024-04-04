@@ -1,32 +1,30 @@
 import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 import "./SearchBar.css"
 
 export const SearchBar = ({ setResults }) => {
     const [input, setInput] = useState("");
 
-    // Function to handle eBay search
-    const handleSearch = async (query) => {
-        try {
-          const response = await axios.get(`http://localhost:3000/search?query=${query}`);
-          setResults(response.data.findItemsByKeywordsResponse[0].searchResult[0].item);
-        } catch (error) {
-          console.error('Error fetching eBay search results:', error);
-        }
-      };
-      
-
     const handleChange = (value) => {
         setInput(value);
-        // Call handleSearch function with the input value
-        handleSearch(value);
     }
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.get(`https://fakestoreapi.com/products?title=${input}`);
+            setResults(response.data);
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+        }
+    };
+
     return (
-        <div className="input-wrapper">
+        <form className="input-wrapper" onSubmit={handleSubmit}>
             <FaSearch id="search-icon" />
             <input placeholder="Type to search..." value={input} onChange={(e) => handleChange(e.target.value)} />
-        </div>
+            <button type="submit" style={{ display: "none" }} />
+        </form>
     );
 }
