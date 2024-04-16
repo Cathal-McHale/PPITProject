@@ -1,35 +1,34 @@
-
+import React, { useState, useEffect } from 'react'; // Add this line
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
-import Card from 'react-bootstrap/Card'; // Add this line
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import About from './Components/about';
 import Trending from './Components/trending';
-import Contact from './Components/contact'; // Ensure you have a Contact component
-import './Components/about.css';
-import './Components/trending.css';
+import Contact from './Components/contact';
 import SignIn from './Components/signin';
 import SignUp from './Components/signUp';
-import React, { useState, useEffect } from 'react';
 import Cart from './Components/cart';
 import { BiCart } from 'react-icons/bi';
 import axios from 'axios';
+import Checkout from './Components/checkout';
+import Card from 'react-bootstrap/Card';
 
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-
-  const [cart, setCart] = useState([]);
-
-  // Function to add item to cart
-  const addToCart = (product) => {
-    setCart([...cart, product]);
+  // Function to handle login
+  const handleLogin = () => {
+    // Perform login logic (e.g., authenticate user)
+    // Set isLoggedIn to true if login is successful
+    setIsLoggedIn(true);
   };
+
   return (
     <BrowserRouter>
       <div className="App">
@@ -43,15 +42,17 @@ function App() {
                 <Nav.Link as={Link} to="/trending">Trending</Nav.Link>
                 <Nav.Link as={Link} to="/about">About</Nav.Link>
                 <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
-
               </Nav>
               <Form inline className="d-flex">
-                <Button variant="outline-success" href="/signin">Sign In</Button>
-                <Button variant="outline-success" href="/signUp">Sign Up</Button>
+                {isLoggedIn ? null : (
+                  <>
+                    <Button variant="outline-success" href="/signin">Sign In</Button>
+                    <Button variant="outline-success" href="/signUp">Sign Up</Button>
+                  </>
+                )}
                 <Button variant="link" href="/cart">
                   <BiCart size={20} /> Cart
                 </Button>
-
               </Form>
             </Navbar.Collapse>
           </Container>
@@ -62,16 +63,16 @@ function App() {
           <Route path="/trending" element={<Trending />}></Route>
           <Route path="/about" element={<About />}></Route>
           <Route path="/contact" element={<Contact />}></Route>
-          <Route path="/signin" element={<SignIn />}></Route>
+          <Route path="/signin" element={<SignIn onLogin={handleLogin} />}></Route>
           <Route path="/signUp" element={<SignUp />}></Route>
-          <Route path="/cart" element={<Cart cart={cart} />} /> {/* Pass cart state as a prop */}
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/cart/checkout" element={<Checkout />} />
         </Routes>
       </div>
     </BrowserRouter>
   );
 }
 
-// Home component (assuming Trending component is similar)
 function Home() {
   const [randomProduct, setRandomProduct] = useState(null);
 
@@ -123,6 +124,5 @@ function Home() {
     </>
   );
 }
-
 
 export default App;

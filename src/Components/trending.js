@@ -8,6 +8,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { SearchBar } from './SearchBar';
 import Footer from './footer';
+import './trending.css'; 
 
 function Trending() {
   const [results, setResults] = useState([]);
@@ -27,20 +28,27 @@ function Trending() {
       .catch(error => console.error('Error fetching products:', error));
   }, []); // Empty dependency array to ensure it only runs once on mount
 
-  // Function to add item to cart
-  const addToCart = (item) => {
-    console.log("Adding to cart:", item); // Debug statement
-    setCart([...cart, item]);
+ // Function to add item to cart
+const addToCart = (item) => {
+  console.log("Adding to cart:", item); // Debug statement
 
-    // Send item data to the server
-    axios.post('http://localhost:4000/add-to-cart', item)
-      .then(response => {
-        console.log('Item added to cart:', response.data);
-      })
-      .catch(error => {
-        console.error('Error adding item to cart:', error);
-      });
-  };
+  // Update cart state
+  setCart([...cart, item]);
+
+  // Update local storage
+  const updatedCart = [...cart, item];
+  localStorage.setItem('cart', JSON.stringify(updatedCart));
+
+  // Send item data to the server 
+  axios.post('http://localhost:4000/add-to-cart', item)
+    .then(response => {
+      console.log('Item added to cart:', response.data);
+    })
+    .catch(error => {
+      console.error('Error adding item to cart:', error);
+    });
+};
+
 
 
 
@@ -72,7 +80,7 @@ function Trending() {
             ))}
           </Row>
         </Container>
-        {/* Place the Footer component outside the Container */}
+      
         <Footer />
       </div>
 

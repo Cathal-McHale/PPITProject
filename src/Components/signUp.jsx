@@ -13,19 +13,16 @@ const SignUp = () => {
 
   const signUp = (e) => {
     e.preventDefault();
-    const auth = getAuth(); // Call getAuth to get the auth instance
+    const auth = getAuth(); 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log(userCredential);
-
-        // Prepare the user data
         const userData = {
           email: email,
           name: name,
           address: address,
           contact: contact
         };
-
         fetch('http://localhost:4000/', {
           method: 'POST',
           headers: {
@@ -36,6 +33,8 @@ const SignUp = () => {
           .then(response => {
             if (response.ok) {
               console.log('User data sent to server successfully');
+              // Redirect to login page after successful sign up
+              window.location.href = '/signin';
             } else {
               throw new Error('Failed to send user data to server');
             }
@@ -56,11 +55,11 @@ const SignUp = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
-        setEmail(user.email); // Set email to user's email from Google
-        
+        setEmail(user.email); 
+        window.location.href = '/signin'; // Redirect to login page after signing up with Google
       })
       .catch((error) => {
-        setError(error.message); // Set error state if sign-in with Google fails
+        setError(error.message);
       });
   };
 

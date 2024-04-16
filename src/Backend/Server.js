@@ -41,6 +41,14 @@ app.post('/authenticate', async (req, res) => {
   }
 });
 
+app.post('/checkout-container', (req, res) => {
+  const itemData = req.body;
+  console.log('Item added to cart:', itemData);
+  // Process the item data as needed
+  // Respond to the client
+  res.send('Item added to cart successfully');
+});
+
 app.post('/add-to-cart', (req, res) => {
   const itemData = req.body;
   console.log('Item added to cart:', itemData);

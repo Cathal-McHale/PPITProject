@@ -1,15 +1,29 @@
-import React, { useState } from "react";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import React, { useState, useEffect } from "react";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import './SignIn.css';
-import axios from 'axios'; // Import Axios
-import { FaGoogle } from 'react-icons/fa'; // Import Google icon from react-icons library
+import axios from 'axios'; 
+import { FaGoogle } from 'react-icons/fa'; 
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null); // State to track signed-in user
 
   const auth = getAuth(); // Get Firebase auth instance
+
+  // Check if user is already signed in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   const signInWithEmail = (e) => {
     e.preventDefault();
@@ -24,7 +38,6 @@ const SignIn = () => {
       })
       .catch((error) => {
         // Handle Errors here
-        const errorCode = error.code;
         const errorMessage = error.message;
         console.error(errorMessage);
         setError(errorMessage); // Set error state
@@ -44,7 +57,6 @@ const SignIn = () => {
       })
       .catch((error) => {
         // Handle Errors here
-        const errorCode = error.code;
         const errorMessage = error.message;
         console.error(errorMessage);
         setError(errorMessage); // Set error state
