@@ -6,8 +6,8 @@ const bodyParser = require('body-parser');
 
 const app = express();
 const port = 4000;
-
-app.use(cors()); // Enable CORS for all routes
+// Enable CORS for all routes
+app.use(cors()); 
 app.use(bodyParser.json());
 
 // Simulated user database
@@ -16,26 +16,22 @@ const users = [
   { email: 'user2@example.com', password: 'password2' }
 ];
 
-// POST request handler for signing in or signing up
+// POST request handler for signing in
 app.post('/authenticate', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Log the received data in the server console
-    console.log('Received data:', { email, password });
-
     // Simulated authentication logic
     const user = users.find(user => user.email === email && user.password === password);
 
     if (user) {
-      // If authentication is successful, send a success response
+      // Set cookie if authentication is successful
+      res.cookie('user', user.email, { maxAge: 900000, httpOnly: true }); // Cookie expires in 15 minutes
       res.status(200).json({ message: 'Authentication successful', user });
     } else {
-      // If authentication fails, send an error response
       res.status(401).json({ error: 'Invalid email or password' });
     }
   } catch (error) {
-    // If an error occurs during authentication, send a server error response
     console.error('Error authenticating user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -52,8 +48,7 @@ app.post('/checkout-container', (req, res) => {
 app.post('/add-to-cart', (req, res) => {
   const itemData = req.body;
   console.log('Item added to cart:', itemData);
-  // Process the item data as needed
-  // Respond to the client
+
   res.send('Item added to cart successfully');
 });
 

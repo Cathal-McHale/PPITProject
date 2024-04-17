@@ -1,43 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
+import React, { useState } from "react";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import './SignIn.css';
-import axios from 'axios'; 
-import { FaGoogle } from 'react-icons/fa'; 
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import axios from 'axios'; // Import axios for making HTTP requests
 
-const SignIn = () => {
+const SignIn = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [user, setUser] = useState(null); // State to track signed-in user
-
   const auth = getAuth(); // Get Firebase auth instance
-
-  // Check if user is already signed in
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [auth]);
+  const navigate = useNavigate(); // Get navigate for redirection
 
   const signInWithEmail = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user);
+      .then(() => {
+        // Set user as logged in
+        onLogin(email);
+        // Redirect user when successful sign-in
+        navigate('/trending');
         setError(null); // Clear any previous errors
-        // Send authentication details to backend
-        sendAuthDetails(email, password);
+        // Send login details to the server
+        axios.post('http://localhost:4000/signin', { email })
+          .then(response => {
+            console.log('Login details sent to server:', response.data);
+          })
+          .catch(error => {
+            console.error('Error sending login details to server:', error);
+          });
       })
       .catch((error) => {
-        // Handle Errors here
+        // Handle Errors 
         const errorMessage = error.message;
         console.error(errorMessage);
         setError(errorMessage); // Set error state
@@ -48,31 +41,27 @@ const SignIn = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        // Signed in with Google
-        const user = result.user;
-        console.log(user);
+        // take user email from Google authentication result
+        const email = result.user.email;
+        // Set user as logged in
+        onLogin(email);
+        // Redirect user when successful sign-in
+        navigate('/trending');
         setError(null); // Clear any previous errors
-        // Send authentication details to backend
-        sendAuthDetails(user.email, 'Google Auth');
+        // Send login details to the server
+        axios.post('http://localhost:4000/signin', { email })
+          .then(response => {
+            console.log('Login details sent to server:', response.data);
+          })
+          .catch(error => {
+            console.error('Error sending login details to server:', error);
+          });
       })
       .catch((error) => {
-        // Handle Errors here
+        // Handle Errors 
         const errorMessage = error.message;
         console.error(errorMessage);
         setError(errorMessage); // Set error state
-      });
-  };
-
-  const sendAuthDetails = (email, method) => {
-    // Make a POST request to your backend with authentication details
-    axios.post('http://localhost:4000/authenticate', { email, method })
-      .then(response => {
-        console.log(response.data);
-        // Handle successful authentication on backend if necessary
-      })
-      .catch(error => {
-        console.error(error);
-        // Handle error if request fails
       });
   };
 
@@ -95,7 +84,6 @@ const SignIn = () => {
         {error && <div className="error-message">{error}</div>} {/* Display error message if exists */}
         <button type="submit">Log In</button>
         <button type="button" className="google-btn" onClick={signInWithGoogle}>
-          <FaGoogle className="google-icon" />
           Sign In with Google
         </button>
       </form>

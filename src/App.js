@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // Add this line
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
@@ -17,58 +17,77 @@ import { BiCart } from 'react-icons/bi';
 import axios from 'axios';
 import Checkout from './Components/checkout';
 import Card from 'react-bootstrap/Card';
-
+import { useCookies } from 'react-cookie'; // Import useCookies hook from react-cookie
+import { AuthProvider } from './Components/authorization'; // Import AuthProvider
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(['user']); // Get user cookie
+  const [isLoggedIn, setIsLoggedIn] = useState(!!cookies.user); // Check if user cookie exists
 
-  // Function to handle login
-  const handleLogin = () => {
-    // Perform login logic (e.g., authenticate user)
-    // Set isLoggedIn to true if login is successful
-    setIsLoggedIn(true);
+ // Function to handle login
+const handleLogin = (user) => {
+  // Perform  necessary actions when successful login
+  setIsLoggedIn(true);
+  // Set user's name in cookies
+  setCookie('user', user); 
+};
+
+
+  // Function to handle logout
+  const handleLogout = () => {
+    setIsLoggedIn(false); // Set isLoggedIn to false
+    removeCookie('user'); // Remove user cookie
   };
 
   return (
     <BrowserRouter>
-      <div className="App">
-        <Navbar bg="dark" variant="dark" expand="lg">
-          <Container>
-            <Navbar.Brand href="/">Trending Products</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link as={Link} to="/">Home</Nav.Link>
-                <Nav.Link as={Link} to="/trending">Trending</Nav.Link>
-                <Nav.Link as={Link} to="/about">About</Nav.Link>
-                <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
-              </Nav>
-              <Form inline className="d-flex">
-                {isLoggedIn ? null : (
-                  <>
-                    <Button variant="outline-success" href="/signin">Sign In</Button>
-                    <Button variant="outline-success" href="/signUp">Sign Up</Button>
-                  </>
-                )}
-                <Button variant="link" href="/cart">
-                  <BiCart size={20} /> Cart
-                </Button>
-              </Form>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+      <AuthProvider> 
+        <div className="App">
+          <Navbar bg="dark" variant="dark" expand="lg">
+            <Container>
+              <Navbar.Brand href="/">Trending Products</Navbar.Brand>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto">
+                  <Nav.Link as={Link} to="/">Home</Nav.Link>
+                  <Nav.Link as={Link} to="/trending">Trending</Nav.Link>
+                  <Nav.Link as={Link} to="/about">About</Nav.Link>
+                  <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
+                </Nav>
+                <Form inline className="d-flex align-items-center"> {/* Adjust alignment */}
+                  {isLoggedIn ? (
+                    // Display welcome message and logout button if user is logged in
+                    <>
+                      <span className="text-light mr-3">Welcome, {cookies.user}</span>
+                      <Button variant="outline-danger" onClick={handleLogout} className="mr-2">Logout</Button> 
+                    </>
+                  ) : (
+                    // Display sign-in and sign-up buttons if user is not logged in
+                    <>
+                      <Button variant="outline-success" href="/signin">Sign In</Button>
+                      <Button variant="outline-success" href="/signUp" className="ml-2">Sign Up</Button> 
+                    </>
+                  )}
+                  <Button variant="link" href="/cart">
+                    <BiCart size={20} /> Cart
+                  </Button>
+                </Form>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
 
-        <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/trending" element={<Trending />}></Route>
-          <Route path="/about" element={<About />}></Route>
-          <Route path="/contact" element={<Contact />}></Route>
-          <Route path="/signin" element={<SignIn onLogin={handleLogin} />}></Route>
-          <Route path="/signUp" element={<SignUp />}></Route>
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/cart/checkout" element={<Checkout />} />
-        </Routes>
-      </div>
+          <Routes>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/trending" element={<Trending />}></Route>
+            <Route path="/about" element={<About />}></Route>
+            <Route path="/contact" element={<Contact />}></Route>
+            <Route path="/signin" element={<SignIn onLogin={handleLogin} />}></Route>
+            <Route path="/signUp" element={<SignUp />}></Route>
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/cart/checkout" element={<Checkout />} />
+          </Routes>
+        </div>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
