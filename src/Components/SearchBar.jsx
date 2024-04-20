@@ -3,7 +3,7 @@ import { FaSearch } from 'react-icons/fa';
 import axios from 'axios';
 import "./SearchBar.css"
 
-export const SearchBar = ({ setResults }) => {
+export const SearchBar = ({ onSearch }) => {
     const [input, setInput] = useState("");
 
     const handleChange = (value) => {
@@ -12,13 +12,16 @@ export const SearchBar = ({ setResults }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('Submitting search form...');
         try {
-            const response = await axios.get(`https://fakestoreapi.com/products?title=${input}`);
-            setResults(response.data);
+          const response = await axios.get(`https://fakestoreapi.com/products?title=${input}`);
+          console.log('Search results:', response.data);
+          onSearch(input); // Passing the search input value to the parent component
         } catch (error) {
-            console.error('Error fetching search results:', error);
+          console.error('Error fetching search results:', error);
         }
-    };
+      };
+      
 
     return (
         <form className="input-wrapper" onSubmit={handleSubmit}>

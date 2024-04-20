@@ -83,7 +83,8 @@ const handleLogin = (user) => {
             <Route path="/contact" element={<Contact />}></Route>
             <Route path="/signin" element={<SignIn onLogin={handleLogin} />}></Route>
             <Route path="/signUp" element={<SignUp />}></Route>
-            <Route path="/cart" element={<Cart />} />
+            {/* Pass isLoggedIn prop to Cart component */}
+            <Route path="/cart" element={<Cart isLoggedIn={isLoggedIn} />} />
             <Route path="/cart/checkout" element={<Checkout />} />
           </Routes>
         </div>

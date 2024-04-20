@@ -10,26 +10,30 @@ import Footer from './footer';
 import './trending.css';
 
 function Trending() {
-  const [results, setResults] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  const [showMessage, setShowMessage] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
-    // Fetch trending products
+    // Fetch all products initially
     axios.get('https://fakestoreapi.com/products')
       .then(response => {
-        setResults(response.data);
+        setAllProducts(response.data);
+        setFilteredProducts(response.data);
       })
       .catch(error => {
-        console.error('Error fetching trending products:', error);
+        console.error('Error fetching products:', error);
       });
   }, []);
 
   // Function to add item to cart
   const addToCart = (item) => {
-    console.log("Adding to cart:", item); // Debug statement
-
-    // Update cart state
-    setCart([...cart, item]);
+    // Show message when item is added to cart
+    setShowMessage(true);
+    setCart([...cart, item]); // Update cart state
+    setCartCount(cartCount + 1); // Update cart count
 
     // Update local storage
     const updatedCart = [...cart, item];
@@ -43,19 +47,33 @@ function Trending() {
       .catch(error => {
         console.error('Error adding item to cart:', error);
       });
+
+    // Hide message after 1 second
+    setTimeout(() => setShowMessage(false), 1000);
+  };
+
+  // Function to filter products based on search input
+  const handleSearch = (input) => {
+    if (typeof input !== 'string') {
+      return;
+    }
+
+    const filtered = allProducts.filter(product =>
+      product.title.toLowerCase().includes(input.toLowerCase())
+    );
+    setFilteredProducts(filtered);
   };
 
   return (
     <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
       <Container>
         <div className="searchbar-container">
-          {/* Pass setResults function to SearchBar component */}
-          <SearchBar setResults={setResults} />
-          {/* Pass results to SearchResultsList component */}
+          {/* Pass handleSearch function to SearchBar component */}
+          <SearchBar onSearch={handleSearch} />
         </div>
         <h1 className="mt-5">Available Products</h1>
         <Row xs={1} md={2} lg={3} className="g-4 mt-3">
-          {results.map((product) => (
+          {filteredProducts.map((product) => (
             <Col key={product.id}>
               <Card className="h-100">
                 <Card.Img variant="top" src={product.image} className="card-img-top" />
@@ -69,6 +87,14 @@ function Trending() {
             </Col>
           ))}
         </Row>
+        {showMessage && (
+          <div className="alert alert-success mt-3" role="alert" style={{ position: 'fixed', top: '10px', left: '50%', transform: 'translateX(-50%)', zIndex: '1000', width: '300px' }}>
+            Item added to cart!
+          </div>
+        )}
+        <div className="cart-count mt-3">
+          Cart Count: {cartCount}
+        </div>
       </Container>
       <Footer />
     </div>

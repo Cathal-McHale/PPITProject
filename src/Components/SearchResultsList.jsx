@@ -1,8 +1,10 @@
+// SearchResultsList.jsx
 import React from "react";
 import "./SearchResultsList.css";
 import { ProductCard } from "./productCard";
 
-export const SearchResultsList = ({ results }) => {
+const SearchResultsList = ({ results }) => {
+    console.log('Results:', results); 
     return (
         <div className="results-list">
             {results && results.length > 0 ? (
@@ -15,3 +17,5 @@ export const SearchResultsList = ({ results }) => {
         </div>
     );
 };
+
+export default SearchResultsList;

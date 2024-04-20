@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from React Router
+import { Link } from 'react-router-dom'; 
 import './cart.css';
 import { Button } from 'react-bootstrap';
+import axios from 'axios';
 
 const Cart = () => {
   // Retrieve cart items from local storage
@@ -30,9 +31,51 @@ const Cart = () => {
   const totalPrice = cart.reduce((total, item) => total + parseFloat(item.price), 0);
 
   // Function to handle checkout
-  const handleCheckout = () => {
-    // Implement checkout logic if needed
+  const handleCheckout = async () => {
+    if (cart.length === 0) {
+      // Display an error message or prevent checkout if the cart is empty
+      alert('Your cart is empty. Please add items before checking out.');
+      return;
+    }
+  
+    // Calculate total price and prepare order data
+    const totalPrice = cart.reduce((total, item) => total + parseFloat(item.price), 0);
+    const orderData = {
+      items: cart,
+      totalPrice: totalPrice.toFixed(2),
+      // userId: loggedInUserId,
+    };
+  
+    try {
+      // Placeholder logic for payment processing
+      const paymentResponse = await axios.post('https://api.paymentservice.com/charge', {
+        amount: totalPrice,
+        currency: 'USD',
+      });
+  
+      // If payment is successful, process the order
+      if (paymentResponse.data.success) {
+        // Call the backend to save the order in the database
+        await axios.post('/api/orders', orderData);
+  
+        // Clear the cart after successful checkout
+        setCart([]);
+        localStorage.removeItem('cart');
+  
+        // Redirect to a success page or display a success message
+        console.log('Order placed successfully!');
+      } else {
+        // If payment fails, display an error message or handle accordingly
+        alert('Payment failed. Please try again.');
+      }
+    } catch (error) {
+      // If an error occurs during payment processing or order saving
+      // Handle the error appropriately (e.g., display an error message)
+      console.error('Checkout error:', error.message);
+      alert('An error occurred during checkout. Please try again later.');
+    }
   };
+  
 
   return (
     <div className="cart-container">
