@@ -7,8 +7,6 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
-
-
 const firebaseConfig = {
   apiKey: "AIzaSyDIPO4UxrU8ybNkV9mR9_apW6hcySiV5gE",
   authDomain: "ppitproject-550fd.firebaseapp.com",

@@ -54,14 +54,14 @@ app.post('/add-to-cart', (req, res) => {
 
 // POST request handler for receiving user data
 app.post('/signin', (req, res) => {
-  // Do something with the received user data
+  // Confirmation with the received user data
   console.log('Received login details:', req.body);
   res.send('Login details received successfully');
 });
 
 // POST request handler for receiving user data
 app.post('/', (req, res) => {
-  // Do something with the received user data
+  // store the received user data
   console.log('Received user data:', req.body);
   res.send('User data received successfully');
 });

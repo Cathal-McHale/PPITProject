@@ -19,19 +19,20 @@ import Checkout from './Components/checkout';
 import Card from 'react-bootstrap/Card';
 import { useCookies } from 'react-cookie'; // Import useCookies hook from react-cookie
 import { AuthProvider } from './Components/authorization'; // Import AuthProvider
+import OrderSummary from './Components/orderSummary';
+
 
 function App() {
   const [cookies, setCookie, removeCookie] = useCookies(['user']); // Get user cookie
   const [isLoggedIn, setIsLoggedIn] = useState(!!cookies.user); // Check if user cookie exists
 
- // Function to handle login
-const handleLogin = (user) => {
-  // Perform  necessary actions when successful login
-  setIsLoggedIn(true);
-  // Set user's name in cookies
-  setCookie('user', user); 
-};
-
+  // Function to handle login
+  const handleLogin = (user) => {
+    // Perform necessary actions when successful login
+    setIsLoggedIn(true);
+    // Set user's name in cookies
+    setCookie('user', user);
+  };
 
   // Function to handle logout
   const handleLogout = () => {
@@ -41,11 +42,18 @@ const handleLogin = (user) => {
 
   return (
     <BrowserRouter>
-      <AuthProvider> 
+      <AuthProvider>
         <div className="App">
           <Navbar bg="dark" variant="dark" expand="lg">
             <Container>
-              <Navbar.Brand href="/">Trending Products</Navbar.Brand>
+            <Navbar.Brand as={Link} to="/">
+                <img
+                  src="https://static.vecteezy.com/system/resources/thumbnails/012/731/827/small/mc-initial-letter-gold-calligraphic-feminine-floral-hand-drawn-heraldic-monogram-antique-vintage-style-luxury-logo-design-premium-vector.jpg"
+                  alt="MockCommerce"
+                  height="30"
+                  className="d-inline-block align-top"
+                /></Navbar.Brand>
+              <Navbar.Brand href="/">MockCommerce</Navbar.Brand>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
@@ -59,13 +67,13 @@ const handleLogin = (user) => {
                     // Display welcome message and logout button if user is logged in
                     <>
                       <span className="text-light mr-3">Welcome, {cookies.user}</span>
-                      <Button variant="outline-danger" onClick={handleLogout} className="mr-2">Logout</Button> 
+                      <Button variant="outline-danger" onClick={handleLogout} className="mr-2">Logout</Button>
                     </>
                   ) : (
                     // Display sign-in and sign-up buttons if user is not logged in
                     <>
                       <Button variant="outline-success" href="/signin">Sign In</Button>
-                      <Button variant="outline-success" href="/signUp" className="ml-2">Sign Up</Button> 
+                      <Button variant="outline-success" href="/signUp" className="ml-2">Sign Up</Button>
                     </>
                   )}
                   <Button variant="link" href="/cart">
@@ -86,6 +94,7 @@ const handleLogin = (user) => {
             {/* Pass isLoggedIn prop to Cart component */}
             <Route path="/cart" element={<Cart isLoggedIn={isLoggedIn} />} />
             <Route path="/cart/checkout" element={<Checkout />} />
+            <Route path="/orderSummary" element={<OrderSummary />} />
           </Routes>
         </div>
       </AuthProvider>
@@ -112,9 +121,9 @@ function Home() {
   return (
     <>
       <header className="App-header">
-        <h1>Welcome to Trending Products</h1>
+        <h1>Welcome to MockCommerce</h1>
         <p>Discover the most popular products right now!</p>
-        <Button variant="primary" as={Link} to="/trending">Explore Trending Products</Button>
+        <Button variant="primary" as={Link} to="/trending">Explore Our Products</Button>
       </header>
 
       <Container className="my-5">

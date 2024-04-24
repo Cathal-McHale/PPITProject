@@ -17,7 +17,7 @@ function Trending() {
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
-    // Fetch all products initially
+    // Fetch all products from FAKESTORE API
     axios.get('https://fakestoreapi.com/products')
       .then(response => {
         setAllProducts(response.data);
@@ -65,6 +65,7 @@ function Trending() {
   };
 
   return (
+    
     <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
       <Container>
         <div className="searchbar-container">
@@ -72,6 +73,9 @@ function Trending() {
           <SearchBar onSearch={handleSearch} />
         </div>
         <h1 className="mt-5">Available Products</h1>
+        <div className="cart-count mt-3">
+          Cart Count: {cartCount}
+        </div>
         <Row xs={1} md={2} lg={3} className="g-4 mt-3">
           {filteredProducts.map((product) => (
             <Col key={product.id}>
@@ -92,9 +96,7 @@ function Trending() {
             Item added to cart!
           </div>
         )}
-        <div className="cart-count mt-3">
-          Cart Count: {cartCount}
-        </div>
+        
       </Container>
       <Footer />
     </div>
